@@ -64,8 +64,6 @@ def get_torch(forcing_cpu=False):
             os.environ['TRANSFORMERS_CACHE'] = get_cache_dir()
         except:
             print('failed changing transformers cache dir')
-    if max_num_gpus == 1:
-        print('remember you are working with 1 gpu:(.. probably should fix gpu index indent')
     import torch
     return torch
 
