@@ -2,7 +2,7 @@ import os
 import time
 
 minimum_free_giga = 4
-max_num_gpus = 3
+max_num_gpus = 1
 
 last_write = 0
 home = '/specific/netapp5/joberant/nlp_fall_2021/glickman'
