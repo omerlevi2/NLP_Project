@@ -34,5 +34,5 @@ for question in questions:
 
 print(str(questions)[:1000])
 
-with open('../data/strategyqa/train_parsed.json','w',encoding='utf-8') as f: f.write(str(questions))
+with open('../../data/strategyqa/train_parsed.json', 'w', encoding='utf-8') as f: f.write(str(questions))
 
