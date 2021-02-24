@@ -34,4 +34,5 @@ for question in questions:
 
 print(str(questions)[:1000])
 
-x = get_evidence_ids(questions[0])
+with open('../data/strategyqa/train_parsed.json','w',encoding='utf-8') as f: f.write(str(questions))
+
