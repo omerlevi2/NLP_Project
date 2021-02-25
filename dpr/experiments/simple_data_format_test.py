@@ -28,14 +28,7 @@ startQA_corpus = doc_dir + "dev/" + 'corpus-enwiki-20200511-cirrussearch-parasv2
 formated_file_name=doc_dir + 'dev/' + 'startqa_corpus_formatted_for_documentstore.json'
 
 dicts = []
-with open(startQA_corpus, 'r') as corpus:
-    with open(formated_file_name, 'w+') as formatted_corpus:
-        formatted_corpus.write('[\n')
-        for line in corpus:
-            example = json.loads(line)
-            l = {'text': example['para'], 'meta': {'title': example['title']}}
-            formatted_corpus.write(json.dumps(l) + '\n')
-        formatted_corpus.write('\n]')
+
 
 document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 # dicts = convert_files_to_dicts(dir_path=doc_dir, clean_func=clean_wiki_text, split_paragraphs=True)
