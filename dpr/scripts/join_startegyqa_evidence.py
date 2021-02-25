@@ -31,6 +31,7 @@ for question in questions:
         positive_cntxs.append(cntx)
 
     question['positive_ctxs'] = positive_cntxs
+    questions['answers'] = [str(questions['answer'])]
 
 print(str(questions)[:1000])
 
