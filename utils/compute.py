@@ -1,7 +1,13 @@
 import os
 import time
+import sys
 
-minimum_free_giga = 4
+# cwd = os.getcwd()
+# print('cwd is: ', cwd)
+# sys.path.append(cwd[:cwd.index('pycharm_project_') + + len('pycharm_project_') + 4])
+
+
+minimum_free_giga = 10
 max_num_gpus = 1
 
 last_write = 0
@@ -31,7 +37,7 @@ def get_index_of_free_gpus(minimum_free_giga=minimum_free_giga):
             lines = os.popen('nvidia-smi -q -d Memory |grep -A4 GPU|grep Free').readlines()
         except Exception as e:
             print('error getting free memory', e)
-            return {0: 10000, 1: 10000, 2: 0, 3: 10000, 4: 0, 5: 0, 6: 0, 7: 0}
+            return {0: 800, 1: 10000, 2: 0, 3: 8000, 4: 0, 5: 0, 6: 0, 7: 0}
 
         memory_available = [int(x.split()[2]) for x in lines]
         return {index: mb for index, mb in enumerate(memory_available)}
