@@ -1,0 +1,49 @@
+StartegyQA Dataset(questions):
+[
+    {
+        "qid": "2bc9c4f9c19c167187f2",
+        "term": "Genghis Khan",
+        "description": "founder and first Great Khan of the Mongol Empire",
+        "question": "Are more people today related to Genghis Khan than Julius Caesar?",
+        "answer": true,
+        "facts": [
+            "Julius Caesar had three children.",
+            "Genghis Khan had sixteen children.",
+            "Modern geneticists have determined that  out of every 200 men today has DNA that can be traced to Genghis Khan."
+        ],
+        "decomposition": [
+            "How many kids did Julius Caesar have?",
+            "How many kids did Genghis Khan have?",
+   "Is #2 greater than #1?"
+        ],
+        "evidence": [
+            [
+                [   ["Caesarion-2",  "Julia (daughter of Caesar)-1"
+                  ....]
+
+
+
+
+========================================================================
+stratQA corpus:
+{"title": "Virginia v. West Virginia", "section": "", "headers": [], "para": "Virginia v. West Virginia, 78 U.S. (11 Wall.) 39 (1871), is a 6-to-3 ruling by the Supreme Court of the United States which held that where a governor has discretion in the conduct of the election, the legislature is bound by his action and cannot undo the results based on fraud. The Court implicitly affirmed that the breakaway Virginia counties had received the necessary consent of both the State of Virginia and the United States Congress to become a separate state, and explicitly held that the counties of Berkeley and Jefferson were part of the new state of West Virginia.", "docid": 1, "secid": 1, "headerid": "", "para_id": 1}
+{"title": "Virginia v. West Virginia", "section": "Background", "headers": [], "para": "At the beginning of the American Civil War, Virginia seceded from the United States in 1861 over slavery, but many of the northwestern counties of Virginia were decidedly pro-union. At a convention called by the governor and authorized by the legislature, delegates voted on April 17, 1861, to approve Virginia's secession from the United States. Although the resolution required approval from voters (at an election scheduled for May 23, 1861), Virginia's governor entered into a treaty of alliance with the Confederate States of America on April 24, elected delegates to the Confederate Congress on April 29, and formally entered the Confederacy on May 7. For President Lincoln, these actions proved that rebels had taken over the state and turned the machinery of the state toward insurrection. These individuals had not acted with popular support, and thus Lincoln felt justified later in recognizing the Reorganized Government.", "docid": 1, "secid": 2, "headerid": "", "para_id": 2}
+
+
+
+
+========================================================================
+natural questoins dataset(questions):
+[
+    {
+        "dataset": "nq_dev_psgs_w100",
+        "question": "who sings does he love me with reba",
+        "answers": [
+            "Linda Davis"
+        ],
+        "positive_ctxs": [
+            {
+                "title": "Does He Love You",
+                "text": "Does He Love You \"Does He Love You\" is a song written by Sandy Knox and Billy Stritch, and recorded as a duet by American country music artists Reba McEntire and Linda Davis. It was released in August 1993 as the first single from Reba's album \"Greatest Hits Volume Two\". It is one of country music's several songs about a love triangle. \"Does He Love You\" was written in 1982 by Billy Stritch. He recorded it with a trio in which he performed at the time, because he wanted a song that could be sung by the other two members",
+                "score": 1000,
+
