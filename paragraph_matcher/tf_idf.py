@@ -59,11 +59,9 @@ class TfIdf:
             counter = 0
             for chunk in tqdm(f):
                 counter += 1
-                 
                 if(counter<=self.n_docs): continue
                 self.n_docs += 1
                 chunk = ast.literal_eval(chunk)
-                # para_dict = json.loads(.decode('utf-8'))
                 para = word_tokenize(chunk['para'])
                 # for sentence in chunck:
                 self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
