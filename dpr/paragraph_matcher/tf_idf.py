@@ -10,7 +10,9 @@ from os import path
 
 PATH_NATURAL_QUES = "C:\\Users\\Omer\\Documents\\NLP class\\v1.0-simplified_simplified-nq-train.jsonl"
 PATH_CORPUS_STRQA = "C:\\Users\\Omer\\Documents\\NLP class\\strategy_unzip\\corpus-enwiki-20200511-cirrussearch-parasv2.jsonl"
-
+PATH_INV_IDX = 'dpr\paragraph_matcher\index\inv_index.pickle'
+PATH_MAPPER = 'dpr\paragraph_matcher\index\mapper.pickle'
+PATH_NUM_DOCS_PASSED = "dpr\paragraph_matcher\index\last_inv_idx_saved.txt"
 
 def preprocess_sentence(sentence : str) -> List[str]:
     output_sentence = []
@@ -54,12 +56,16 @@ class TfIdf:
         
     def fit(self) -> None:
         with open(PATH_CORPUS_STRQA + '\\enwiki-20200511-cirrussearch-parasv2.jsonl','r') as f:
-            first_run = path.exists("index\last_inv_idx_saved.txt")
-            self.n_docs = self.get_last_run() if first_run else 0
+            not_first_run = path.exists("dpr\paragraph_matcher\index\last_inv_idx_saved.txt")
+            docs_passed = self.get_last_run() if not_first_run else 0 #save a const var for later comparison
+            self.n_docs = docs_passed
             counter = 0
             for chunk in tqdm(f):
                 counter += 1
                 if(counter<=self.n_docs): continue
+                if((counter-1 == docs_passed) and docs_passed != 0):
+                    self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
+                    self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
                 self.n_docs += 1
                 chunk = ast.literal_eval(chunk)
                 para = word_tokenize(chunk['para'])
@@ -70,10 +76,10 @@ class TfIdf:
                 # sentence = self.sentence_preprocesser(sentence)
                 if para:
                     self.update_counts_and_probabilities(para,self.n_docs)
-                    if(self.n_docs % (10**2) == 0):
+                    if(self.n_docs % (5*(10**5)) == 0):
                         self.save_bow()
                         self.save_last_doc_saved()
-        pickle.dump(self.mapper,open('mapper.pickle','wb'))
+                        self.save_mapper()
         self.compute_word_document_frequency()
         self.update_inverted_index_with_tf_idf_and_compute_document_norm()
              
@@ -96,19 +102,23 @@ class TfIdf:
             self.doc_norms[doc] = np.sqrt(self.doc_norms[doc]) 
 
     def save_bow(self):
-        with open('index\inv_index.pickle','wb') as out:
+        with open(PATH_INV_IDX,'wb') as out:
             pickle.dump(self.inverted_index,out)
     
     def save_last_doc_saved(self):
-        f = open("index\last_inv_idx_saved.txt",'w')
+        f = open(PATH_NUM_DOCS_PASSED,'w')
         as_str = str(self.n_docs)
         f.write(as_str)
         f.close()
     
     def get_last_run(self):
-        f = open("index\last_inv_idx_saved.txt",'r')
+        f = open(PATH_NUM_DOCS_PASSED,'r')
         last_run = int(f.read())
         return last_run
+    
+    def save_mapper(self):
+        with open(PATH_MAPPER,'wb') as out:
+            pickle.dump(self.mapper,out)
 
 class DocumentRetriever:
     def __init__(self, tf_idf):
