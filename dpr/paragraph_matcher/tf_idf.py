@@ -43,8 +43,7 @@ class TfIdf:
     def update_counts_and_probabilities(self, sentence :List[str],document_id:int) -> None:
         sentence_len = len(sentence)
         self.document_term_frequency[document_id] = sentence_len
-        for i,word in enumerate(sentence):
-            ### YOUR CODE HERE
+        for _,word in enumerate(sentence):
             self.unigram_count[word] += 1 
             if word not in self.inverted_index:
                 self.inverted_index.update({word:{document_id:1}})
@@ -52,7 +51,7 @@ class TfIdf:
                 self.inverted_index[word][document_id] += 1
             else:
                     self.inverted_index[word].update({document_id: 1}) 
-            ### END YOUR CODE
+            
         
     def fit(self) -> None:
         with open(PATH_CORPUS_STRQA + '\\enwiki-20200511-cirrussearch-parasv2.jsonl','r') as f:
@@ -85,19 +84,17 @@ class TfIdf:
              
     def compute_word_document_frequency(self):
         for word in self.inverted_index.keys():
-            ### YOUR CODE HERE
             self.word_document_frequency[word] = len(self.inverted_index[word])
-            ### END YOUR CODE
+            
             
     def update_inverted_index_with_tf_idf_and_compute_document_norm(self):
-        ### YOUR CODE HERE
         for term in self.inverted_index:
             for doc, freq in self.inverted_index[term].items():
                 self.inverted_index[term][doc] = (freq / self.document_term_frequency[doc] * np.log10(self.n_docs/self.word_document_frequency[term]))
                 if doc not in self.doc_norms:
                     self.doc_norms.update({doc:0}) 
                 self.doc_norms[doc] += (self.inverted_index[term][doc]**2)
-        ### END YOUR CODE
+        
         for doc in self.doc_norms.keys():
             self.doc_norms[doc] = np.sqrt(self.doc_norms[doc]) 
 
@@ -132,7 +129,6 @@ class DocumentRetriever:
     def rank(self, query: Dict[str, int], documents: Dict[str, Counter], metric: str) -> Dict[str, float]:
         result = {}  # key: DocID , value : float , simmilarity to query
         query_len = np.sum(np.array(list(query.values())))
-        ### YOUR CODE HERE
         for term, count in query.items(): #in this loop we're updating the query's weights 
             query[term] = (count / query_len * np.log10(tf_idf.n_docs / tf_idf.word_document_frequency[term]))
             for doc, freq in documents[term].items():
@@ -140,23 +136,21 @@ class DocumentRetriever:
                     result.update({doc: 0})
                 if metric == 'inner_product':
                     result[doc] += query[term] * freq
-            ### END YOUR CODE
+            
                 if metric == 'cosine':
-            ### YOUR CODE HERE
+            
                     result[doc] += (query[term] * freq / self.doc_norms[doc])
 
-                ### END YOUR CODE
+                
         return result
 
     def sort_and_retrieve_k_best(self, scores: Dict[str, float], k: int):
-        ### YOUR CODE HERE
         return list({k: v for k, v in sorted(scores.items(), key=lambda item: item[1],reverse=True)})[:k]
-        ### END YOUR CODE
+        
 
     def reduce_query_to_counts(self, query: List) :
-        ### YOUR CODE HERE
         return dict(Counter(query)) # rank get Dict as input so we used this cast (even that a counter is a dict)
-        ### END YOUR CODE
+        
 
     def get_top_k_documents(self, query: str, metric: str, k=5) -> List[str]:
         query = self.sentence_preprocesser(query)
