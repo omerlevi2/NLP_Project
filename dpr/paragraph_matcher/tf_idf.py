@@ -7,6 +7,7 @@ import json
 import pickle
 from tqdm import tqdm
 from os import path
+import os
 
 from nltk.tokenize import word_tokenize 
 from nltk.stem.porter import PorterStemmer
@@ -96,12 +97,17 @@ class TfIdf:
                 # sentence = self.sentence_preprocesser(sentence)
                 if para:
                     self.update_counts_and_probabilities(para,self.n_docs)
+                    # backup every 5 million iterations
                     if(self.n_docs % (5*(10**6)) == 0):
+                        os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
                         self.save_inv_idx()
                         self.save_last_doc_saved()
                         self.save_mapper()
-        self.compute_word_document_frequency()
-        self.update_inverted_index_with_tf_idf_and_compute_document_norm()
+        self.save_inv_idx()
+        self.save_last_doc_saved()
+        self.save_mapper()
+        # self.compute_word_document_frequency()
+        # self.update_inverted_index_with_tf_idf_and_compute_document_norm()
              
     def compute_word_document_frequency(self):
         for word in self.inverted_index.keys():
