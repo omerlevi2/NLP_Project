@@ -7,6 +7,19 @@ import json
 import pickle
 from tqdm import tqdm
 from os import path
+import os
+
+from nltk.tokenize import word_tokenize 
+from nltk.stem.porter import PorterStemmer
+import nltk
+# nltk.download("stopwords")
+# nltk.download("punkt")
+from string import punctuation, ascii_lowercase
+from nltk.corpus import stopwords
+
+stemmer = PorterStemmer()
+stop_words = set(stopwords.words('english'))
+allowed_symbols = set(l for l in ascii_lowercase)
 
 PATH_NATURAL_QUES = "C:\\Users\\Omer\\Documents\\NLP class\\v1.0-simplified_simplified-nq-train.jsonl"
 PATH_CORPUS_STRQA = "C:\\Users\\Omer\\Documents\\NLP class\\strategy_unzip\\corpus-enwiki-20200511-cirrussearch-parasv2.jsonl"
@@ -14,12 +27,6 @@ PATH_INV_IDX = 'dpr\paragraph_matcher\index\inv_index.pickle'
 PATH_MAPPER = 'dpr\paragraph_matcher\index\mapper.pickle'
 PATH_NUM_DOCS_PASSED = "dpr\paragraph_matcher\index\last_inv_idx_saved.txt"
 
-def preprocess_sentence(sentence : str) -> List[str]:
-    output_sentence = []
-    for word in word_tokenize(sentence):
-        output_sentence.append(word)
-
-    return output_sentence
 
 def convert_to_passage(para: dict):
         start_token = para['annotations'][0]["long_answer"]["start_token"]
@@ -36,7 +43,7 @@ class TfIdf:
         self.inverted_index = {}
         self.doc_norms = {}
         self.n_docs = 0
-        self.sentence_preprocesser = preprocess_sentence
+        # self.sentence_preprocesser = preprocess_sentence
         self.mapper = {}
         # self.bow_path = BOW_PATH
 
@@ -51,6 +58,18 @@ class TfIdf:
                 self.inverted_index[word][document_id] += 1
             else:
                     self.inverted_index[word].update({document_id: 1}) 
+    
+    def preprocess_sentence(self, sentence : str) -> List[str]:
+        output_sentence = []
+        for word in word_tokenize(sentence):
+            word = word.lower()
+            word = ''.join([i for i in word if i in allowed_symbols])
+            if(word in stop_words):
+                continue  
+            word = stemmer.stem(word)
+            if(len(word)>1):
+                output_sentence.append(word)
+        return output_sentence
             
         
     def fit(self) -> None:
@@ -67,7 +86,10 @@ class TfIdf:
                     self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
                 self.n_docs += 1
                 chunk = ast.literal_eval(chunk)
-                para = word_tokenize(chunk['para'])
+                # para = word_tokenize(chunk['para'])
+                para = self.preprocess_sentence(chunk['para'])
+                # print(para)
+                # print(len(para))
                 # for sentence in chunck:
                 self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
                 # if not isinstance(para, str):
@@ -75,12 +97,17 @@ class TfIdf:
                 # sentence = self.sentence_preprocesser(sentence)
                 if para:
                     self.update_counts_and_probabilities(para,self.n_docs)
-                    if(self.n_docs % (5*(10**5)) == 0):
-                        self.save_bow()
+                    # backup every 5 million iterations
+                    if(self.n_docs % (5*(10**6)) == 0):
+                        os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
+                        self.save_inv_idx()
                         self.save_last_doc_saved()
                         self.save_mapper()
-        self.compute_word_document_frequency()
-        self.update_inverted_index_with_tf_idf_and_compute_document_norm()
+        self.save_inv_idx()
+        self.save_last_doc_saved()
+        self.save_mapper()
+        # self.compute_word_document_frequency()
+        # self.update_inverted_index_with_tf_idf_and_compute_document_norm()
              
     def compute_word_document_frequency(self):
         for word in self.inverted_index.keys():
@@ -98,7 +125,7 @@ class TfIdf:
         for doc in self.doc_norms.keys():
             self.doc_norms[doc] = np.sqrt(self.doc_norms[doc]) 
 
-    def save_bow(self):
+    def save_inv_idx(self):
         with open(PATH_INV_IDX,'wb') as out:
             pickle.dump(self.inverted_index,out)
     
@@ -119,7 +146,7 @@ class TfIdf:
 
 class DocumentRetriever:
     def __init__(self, tf_idf):
-        self.sentence_preprocesser = preprocess_sentence
+        self.sentence_preprocesser = self.preprocess_sentence
         self.vocab = set(tf_idf.unigram_count.keys())
         self.n_docs = tf_idf.n_docs
         self.inverted_index = tf_idf.inverted_index
