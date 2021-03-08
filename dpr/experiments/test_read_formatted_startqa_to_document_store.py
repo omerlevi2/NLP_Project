@@ -16,7 +16,9 @@ passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
 save_dir = "../saved_models/dpr"
 doc_dir = '/data/'
 
-formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
+# formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
+#TEMP FOR TESTING
+formated_file_name = doc_dir + 'sample_startqa_corpus_formatted_for_documentstore.jsonl'
 
 document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
@@ -27,7 +29,10 @@ with open(formated_file_name, 'r') as corpus:
     for line in corpus:
         if line.startswith('[') or line.startswith(']'):
             continue
-        dicts.append(json.loads(line))
+        d = json.loads(line)
+        if d['meta']['title']:
+            d['meta']['name'] = d['meta']['title']
+        dicts.append(d)
         counter += 1
         if counter % 1000 == 0:
             document_store.write_documents(dicts)
