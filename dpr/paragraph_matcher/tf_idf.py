@@ -72,46 +72,49 @@ class TfIdf:
         return output_sentence
             
         
-    def fit(self) -> None:
-        with open(PATH_CORPUS_STRQA + '\\enwiki-20200511-cirrussearch-parasv2.jsonl','r') as f:
-            not_first_run = path.exists("dpr\paragraph_matcher\index\last_inv_idx_saved.txt")
-            docs_passed = self.get_last_run() if not_first_run else 0 #save a const var for later comparison
-            self.n_docs = docs_passed
-            counter = 0
-            for chunk in tqdm(f):
-                counter += 1
-                if(counter<=self.n_docs): continue
-                if((counter-1 == docs_passed) and docs_passed != 0):
-                    self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
-                    # self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
-                self.n_docs += 1
-                chunk = ast.literal_eval(chunk)
-                # para = word_tokenize(chunk['para'])
-                para = self.preprocess_sentence(chunk['para'])
-                # print(para)
-                # print(len(para))
-                # for sentence in chunck:
-                self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
-                # if not isinstance(para, str):
-                #     continue
-                # sentence = self.sentence_preprocesser(sentence)
-                if para:
-                    self.update_counts_and_probabilities(para,self.n_docs)
-                    # print(self.inverted_index)
-                    # backup every 5 million iterations
-                    if(self.n_docs % (5*(10**6)) == 0):
-                        os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
-                        file_prefix = str(int(self.n_docs/(10**6)))
-                        self.save_inv_idx(file_prefix)
-                        self.save_last_doc_saved()
-                        self.save_mapper()
-                        self.inverted_index = {}
-        file_prefix = str(int(self.n_docs/(10**6)))
-        self.save_inv_idx(file_prefix)
-        self.save_last_doc_saved()
-        self.save_mapper()
-        # self.compute_word_document_frequency()
-        # self.update_inverted_index_with_tf_idf_and_compute_document_norm()
+    def fit(self,final_processing:bool) -> None:
+        if(not final_processing):
+            with open(PATH_CORPUS_STRQA + '\\enwiki-20200511-cirrussearch-parasv2.jsonl','r') as f:
+                not_first_run = path.exists("dpr\paragraph_matcher\index\last_inv_idx_saved.txt")
+                docs_passed = self.get_last_run() if not_first_run else 0 #save a const var for later comparison
+                self.n_docs = docs_passed
+                counter = 0
+                for chunk in tqdm(f):
+                    counter += 1
+                    if(counter<=self.n_docs): continue
+                    if((counter-1 == docs_passed) and docs_passed != 0):
+                        self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
+                        # self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
+                    self.n_docs += 1
+                    chunk = ast.literal_eval(chunk)
+                    # para = word_tokenize(chunk['para'])
+                    para = self.preprocess_sentence(chunk['para'])
+                    # print(para)
+                    # print(len(para))
+                    # for sentence in chunck:
+                    self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
+                    # if not isinstance(para, str):
+                    #     continue
+                    # sentence = self.sentence_preprocesser(sentence)
+                    if para:
+                        self.update_counts_and_probabilities(para,self.n_docs)
+                        # print(self.inverted_index)
+                        # backup every 5 million iterations
+                        if(self.n_docs % (5*(10**6)) == 0):
+                            os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
+                            file_prefix = str(int(self.n_docs/(10**6)))
+                            self.save_inv_idx(file_prefix)
+                            self.save_last_doc_saved()
+                            self.save_mapper()
+                            self.inverted_index = {}
+            file_prefix = str(int(self.n_docs/(10**6)))
+            self.save_inv_idx(file_prefix)
+            self.save_last_doc_saved()
+            self.save_mapper()
+        else:
+            self.inverted_index = pickle.load(open('index\final_dict','rb'))
+            self.compute_word_document_frequency()
+            self.update_inverted_index_with_tf_idf_and_compute_document_norm()
              
     def compute_word_document_frequency(self):
         for word in self.inverted_index.keys():
@@ -193,13 +196,14 @@ class DocumentRetriever:
         
 
 if __name__ == '__main__':
-    # path = PATH_N_QUES
-    # with open(path + '\\simplified-nq-train.jsonl','rb') as f:
-    #     for line in f: 
-    #         long_passage = convert_to_passage(line)
-    #         if(len(long_passage)==0):
-    #             continue
-    #         print(long_passage)
+    path = PATH_NATURAL_QUES
+    with open(path + '\\simplified-nq-train.jsonl','rb') as f:
+        for line in f: 
+            line = json.loads(line.decode('utf-8'))
+            long_passage = convert_to_passage(line)
+            if(len(long_passage)==0):
+                continue
+            print(long_passage)
 
     tf_idf = TfIdf()
-    tf_idf.fit()
+    tf_idf.fit(final_processing=True)
