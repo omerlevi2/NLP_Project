@@ -14,6 +14,7 @@ from haystack.document_store.faiss import FAISSDocumentStore
 query_model = "facebook/dpr-question_encoder-single-nq-base"
 passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
 save_dir = "../saved_models/dpr"
+doc_dir = '/data/'
 
 formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
 
