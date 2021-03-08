@@ -196,14 +196,14 @@ class DocumentRetriever:
         
 
 if __name__ == '__main__':
-    path = PATH_NATURAL_QUES
-    with open(path + '\\simplified-nq-train.jsonl','rb') as f:
-        for line in f: 
-            line = json.loads(line.decode('utf-8'))
-            long_passage = convert_to_passage(line)
-            if(len(long_passage)==0):
-                continue
-            print(long_passage)
+    # path = PATH_NATURAL_QUES
+    # with open(path + '\\simplified-nq-train.jsonl','rb') as f:
+    #     for line in f: 
+    #         line = json.loads(line.decode('utf-8'))
+    #         long_passage = convert_to_passage(line)
+    #         if(len(long_passage)==0):
+    #             continue
+    #         print(long_passage)
 
     tf_idf = TfIdf()
     tf_idf.fit(final_processing=True)
