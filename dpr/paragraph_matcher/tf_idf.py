@@ -23,7 +23,7 @@ allowed_symbols = set(l for l in ascii_lowercase)
 
 PATH_NATURAL_QUES = "C:\\Users\\Omer\\Documents\\NLP class\\v1.0-simplified_simplified-nq-train.jsonl"
 PATH_CORPUS_STRQA = "C:\\Users\\Omer\\Documents\\NLP class\\strategy_unzip\\corpus-enwiki-20200511-cirrussearch-parasv2.jsonl"
-PATH_INV_IDX = 'dpr\paragraph_matcher\index\inv_index.pickle'
+PATH_INV_IDX = 'dpr\paragraph_matcher\index\\inv_index_'
 PATH_MAPPER = 'dpr\paragraph_matcher\index\mapper.pickle'
 PATH_NUM_DOCS_PASSED = "dpr\paragraph_matcher\index\last_inv_idx_saved.txt"
 
@@ -83,7 +83,7 @@ class TfIdf:
                 if(counter<=self.n_docs): continue
                 if((counter-1 == docs_passed) and docs_passed != 0):
                     self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
-                    self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
+                    # self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
                 self.n_docs += 1
                 chunk = ast.literal_eval(chunk)
                 # para = word_tokenize(chunk['para'])
@@ -97,13 +97,17 @@ class TfIdf:
                 # sentence = self.sentence_preprocesser(sentence)
                 if para:
                     self.update_counts_and_probabilities(para,self.n_docs)
+                    # print(self.inverted_index)
                     # backup every 5 million iterations
                     if(self.n_docs % (5*(10**6)) == 0):
                         os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
-                        self.save_inv_idx()
+                        file_prefix = str(int(self.n_docs/(10**6)))
+                        self.save_inv_idx(file_prefix)
                         self.save_last_doc_saved()
                         self.save_mapper()
-        self.save_inv_idx()
+                        self.inverted_index = {}
+        file_prefix = str(int(self.n_docs/(10**6)))
+        self.save_inv_idx(file_prefix)
         self.save_last_doc_saved()
         self.save_mapper()
         # self.compute_word_document_frequency()
@@ -125,8 +129,8 @@ class TfIdf:
         for doc in self.doc_norms.keys():
             self.doc_norms[doc] = np.sqrt(self.doc_norms[doc]) 
 
-    def save_inv_idx(self):
-        with open(PATH_INV_IDX,'wb') as out:
+    def save_inv_idx(self,file_prefix):
+        with open(PATH_INV_IDX + file_prefix,'wb') as out:
             pickle.dump(self.inverted_index,out)
     
     def save_last_doc_saved(self):
