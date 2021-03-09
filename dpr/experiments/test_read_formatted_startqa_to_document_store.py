@@ -9,7 +9,6 @@ from dpr.experiments.startQA import populate_document_store_from_startqa
 
 query_model = "facebook/dpr-question_encoder-single-nq-base"
 passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
-save_dir = "../saved_models/dpr"
 
 should_update_document_store = True
 document_store_save_path = 'ds_save_file'
