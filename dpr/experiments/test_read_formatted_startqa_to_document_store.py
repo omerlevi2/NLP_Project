@@ -38,7 +38,7 @@ if should_update_document_store:
                 d['meta']['name'] = d['meta']['title']
             dicts.append(d)
             counter += 1
-            if counter % 1000 == 0:
+            if counter % 10_000 == 0:
                 document_store.write_documents(dicts)
                 dicts = []
                 print('wrote ', counter, ' documents')
