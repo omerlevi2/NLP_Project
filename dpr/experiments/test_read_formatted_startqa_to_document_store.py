@@ -2,13 +2,11 @@
 #
 # compute.get_torch()
 
-from haystack.retriever.dense import DensePassageRetriever
 from haystack.document_store.faiss import FAISSDocumentStore
 
+from dpr.experiments.retriever import get_retriever
 from dpr.experiments.startQA import populate_document_store_from_startqa
 
-query_model = "facebook/dpr-question_encoder-single-nq-base"
-passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
 
 should_update_document_store = True
 document_store_save_path = 'ds_save_file'
@@ -25,14 +23,7 @@ if should_update_document_store:
 
     populate_document_store_from_startqa(formated_file_name, document_store)
 
-    retriever = DensePassageRetriever(
-        document_store=document_store,
-        query_embedding_model=query_model,
-        passage_embedding_model=passage_model,
-        max_seq_len_query=64,
-        max_seq_len_passage=256,
-        use_gpu=True
-    )
+    retriever = get_retriever(document_store)
 
     print('updating document store')
 
