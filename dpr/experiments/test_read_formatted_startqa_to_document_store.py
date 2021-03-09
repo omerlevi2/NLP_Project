@@ -50,7 +50,8 @@ if should_update_document_store:
     # dicts = convert_files_to_dicts(dir_path=doc_dir, clean_func=clean_wiki_text, split_paragraphs=True)
     # Now, let's write the dicts containing documents to our DB.
     doc_dir = "data/"
-    print(document_store.get_all_documents())
+
+    # assert len(document_store.get_all_documents()) > 0
 
     retriever = DensePassageRetriever(
         document_store=document_store,
