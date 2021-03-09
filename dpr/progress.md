@@ -1,6 +1,10 @@
 
 todo:
-(Daniel) run dpr retrieval on startQA dataset 
+(Daniel) run dpr retrieval on startQA dataset
+
+
+fix dev set paragraphs:
+    join_startegyqa_evidence.py does not work because there is no strategyqa_dev_paragraphs.json
 
 
 
