@@ -43,8 +43,9 @@ if should_update_document_store:
                 print('wrote ', counter, ' documents')
             if counter > max_docs:
                 break
-    print('done writing')
+    document_store.write_documents(dicts)
     dicts = []
+    print('done writing')
 
     # dicts = convert_files_to_dicts(dir_path=doc_dir, clean_func=clean_wiki_text, split_paragraphs=True)
     # Now, let's write the dicts containing documents to our DB.
