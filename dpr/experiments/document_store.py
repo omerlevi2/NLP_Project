@@ -2,6 +2,8 @@ import json
 
 from tqdm import tqdm
 
+document_store_save_path = 'ds_save_file'
+
 max_docs_to_write = 100_000
 write_batch_size = 10_000
 

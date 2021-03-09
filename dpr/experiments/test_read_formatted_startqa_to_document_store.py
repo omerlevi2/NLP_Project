@@ -5,11 +5,9 @@
 from haystack.document_store.faiss import FAISSDocumentStore
 
 from dpr.experiments.retriever import get_retriever
-from dpr.experiments.document_store import populate_document_store_from_strategyqa
-
+from dpr.experiments.document_store import populate_document_store_from_strategyqa, document_store_save_path
 
 should_update_document_store = True
-document_store_save_path = 'ds_save_file'
 
 doc_dir = 'data/'
 
