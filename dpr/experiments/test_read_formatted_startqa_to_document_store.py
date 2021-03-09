@@ -50,7 +50,7 @@ if should_update_document_store:
     # dicts = convert_files_to_dicts(dir_path=doc_dir, clean_func=clean_wiki_text, split_paragraphs=True)
     # Now, let's write the dicts containing documents to our DB.
 
-    # assert len(document_store.get_all_documents()) > 0
+    assert document_store.get_document_count() > 0
 
     retriever = DensePassageRetriever(
         document_store=document_store,
@@ -66,6 +66,7 @@ if should_update_document_store:
     # this is done only once
     document_store.update_embeddings(retriever)
     document_store.save(document_store_save_path)
+    print('done')
 # loading existing store
 else:
     document_store = FAISSDocumentStore.load(document_store_save_path)
