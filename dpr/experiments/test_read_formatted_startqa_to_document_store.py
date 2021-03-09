@@ -15,7 +15,7 @@ save_dir = "../saved_models/dpr"
 should_update_document_store = True
 document_store_save_path = 'ds_save_file'
 
-doc_dir = '/data/'
+doc_dir = 'data/'
 
 if should_update_document_store:
 
