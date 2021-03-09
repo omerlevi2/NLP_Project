@@ -5,10 +5,6 @@ import json
 import os
 import sys
 
-cwd = os.getcwd()
-print('cwd is: ', cwd)
-# sys.path.append(cwd[:cwd.index('pycharm_project_') + + len('pycharm_project_') + 4])
-
 from haystack.retriever.dense import DensePassageRetriever
 from haystack.document_store.faiss import FAISSDocumentStore
 
