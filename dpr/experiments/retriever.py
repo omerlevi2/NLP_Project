@@ -1,6 +1,6 @@
 from haystack.retriever.dense import DensePassageRetriever
 
-batch_size: int = 16
+batch_size: int = 1024
 
 
 def get_retriever(document_store):
