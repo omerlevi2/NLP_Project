@@ -35,6 +35,7 @@ for question in questions:
     data_to_write.append(
         {
             'dataset': 'startegyqa',
+            'question': question['question'],
             'positive_ctxs': positive_cntxs,
             'negative_ctxs': [],
             'hard_negative_ctxs': [],
