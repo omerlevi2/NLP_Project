@@ -1,13 +1,11 @@
 # from utils import compute
 #
 # compute.get_torch()
-import json
-import os
-import sys
-from tqdm import tqdm
 
 from haystack.retriever.dense import DensePassageRetriever
 from haystack.document_store.faiss import FAISSDocumentStore
+
+from dpr.experiments.startQA import populate_document_store_from_startqa
 
 query_model = "facebook/dpr-question_encoder-single-nq-base"
 passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
@@ -26,32 +24,7 @@ if should_update_document_store:
 
     document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
-    dicts = []
-    max_docs = 100_001
-    with open(formated_file_name, 'r') as corpus:
-        counter = 1
-        for line in tqdm(corpus):
-            if line.startswith('[') or line.startswith(']'):
-                continue
-            d = json.loads(line)
-            if d['meta']['title']:
-                d['meta']['name'] = d['meta']['title']
-            dicts.append(d)
-            counter += 1
-            if counter % 10_000 == 0:
-                document_store.write_documents(dicts)
-                dicts = []
-                print('wrote ', counter, ' documents')
-            if counter > max_docs:
-                break
-    document_store.write_documents(dicts)
-    dicts = []
-    print('done writing')
-
-    # dicts = convert_files_to_dicts(dir_path=doc_dir, clean_func=clean_wiki_text, split_paragraphs=True)
-    # Now, let's write the dicts containing documents to our DB.
-
-    assert document_store.get_document_count() > 0
+    populate_document_store_from_startqa(formated_file_name, document_store)
 
     retriever = DensePassageRetriever(
         document_store=document_store,
