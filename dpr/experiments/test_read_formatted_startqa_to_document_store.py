@@ -20,14 +20,14 @@ doc_dir = 'data/'
 
 if should_update_document_store:
 
-    # formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
+    formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
     # TEMP FOR TESTING
-    formated_file_name = doc_dir + 'sample_startqa_corpus_formatted_for_documentstore.jsonl'
+    # formated_file_name = doc_dir + 'sample_startqa_corpus_formatted_for_documentstore.jsonl'
 
     document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
     dicts = []
-    max_docs = 10_00
+    max_docs = 100_001
     with open(formated_file_name, 'r') as corpus:
         counter = 1
         for line in tqdm(corpus):
@@ -59,7 +59,7 @@ if should_update_document_store:
         passage_embedding_model=passage_model,
         max_seq_len_query=64,
         max_seq_len_passage=256,
-        # use_gpu=False
+        use_gpu=True
     )
 
     print('updating document store')
