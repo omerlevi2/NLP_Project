@@ -5,7 +5,7 @@
 from haystack.document_store.faiss import FAISSDocumentStore
 
 from dpr.experiments.retriever import get_retriever
-from dpr.experiments.startQA import populate_document_store_from_strategyqa
+from dpr.experiments.document_store import populate_document_store_from_strategyqa
 
 
 should_update_document_store = True
