@@ -15,13 +15,15 @@ def get_evidence_ids(startqa_example):
     return [x for x in evidence_ids if not x == 'operation' and not x == 'no_evidence']
 
 
-paragraphs_json = '../data/strategyqa/strategyqa_train_paragraphs.json'
-train_json = '../data/strategyqa/train.json'
+split = 'train'
+paragraphs_json = '../../data/strategyqa/strategyqa_%s_paragraphs.json' % split
+train_json = '../../data/strategyqa/%s.json' % split
 with open(paragraphs_json, 'r') as para_file:
     paragraphs = json.load(para_file)
 with open(train_json, 'r', encoding="utf8") as train_file:
     questions = json.load(train_file)
 
+data_to_write = []
 for question in questions:
     evidence_ids = get_evidence_ids(question)
     positive_cntxs = []
@@ -30,13 +32,14 @@ for question in questions:
         cntx = {'title': para_data['title'], 'text': para_data['content']}
         positive_cntxs.append(cntx)
 
-    question['positive_ctxs'] = positive_cntxs
-    question['negative_ctxs'] = []
-    question['hard_negative_ctxs'] = []
+    data_to_write.append(
+        {
+            'dataset': 'startegyqa',
+            'positive_ctxs': positive_cntxs,
+            'negative_ctxs': [],
+            'hard_negative_ctxs': [],
+            'answers': [str(question['answer'])]
+        }
+    )
 
-    questions['answers'] = [str(questions['answer'])]
-
-print(str(questions)[:1000])
-
-with open('../../data/strategyqa/train_parsed.json', 'w', encoding='utf-8') as f: f.write(str(questions))
-
+with open('../../data/strategyqa/%s_parsed.json' % split, 'w', encoding='utf-8') as f: f.write(str(data_to_write))
