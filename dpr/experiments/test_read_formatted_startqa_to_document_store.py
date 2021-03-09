@@ -5,7 +5,7 @@
 from haystack.document_store.faiss import FAISSDocumentStore
 
 from dpr.experiments.retriever import get_retriever
-from dpr.experiments.document_store import populate_document_store_from_strategyqa, document_store_save_path
+from dpr.experiments.document_store import populate_document_store_from_strategyqa, document_store_save_path, load_saved_document_store
 
 should_update_document_store = True
 
@@ -31,4 +31,4 @@ if should_update_document_store:
     print('done')
 # loading existing store
 else:
-    document_store = FAISSDocumentStore.load(document_store_save_path)
+    document_store = load_saved_document_store()

@@ -1,5 +1,6 @@
 import json
 
+from haystack.document_store.faiss import FAISSDocumentStore
 from tqdm import tqdm
 
 document_store_save_path = 'ds_save_file'
@@ -30,3 +31,8 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
     document_store.write_documents(dicts)
     print('done writing')
     assert document_store.get_document_count() > 0
+
+
+def load_saved_document_store(document_store_class=FAISSDocumentStore):
+    return document_store_class.load(document_store_save_path)
+
