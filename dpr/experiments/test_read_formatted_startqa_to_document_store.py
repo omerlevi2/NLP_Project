@@ -4,6 +4,7 @@
 import json
 import os
 import sys
+from tqdm import tqdm
 
 from haystack.retriever.dense import DensePassageRetriever
 from haystack.document_store.faiss import FAISSDocumentStore
@@ -29,7 +30,7 @@ if should_update_document_store:
     max_docs = 10_00
     with open(formated_file_name, 'r') as corpus:
         counter = 1
-        for line in corpus:
+        for line in tqdm(corpus):
             if line.startswith('[') or line.startswith(']'):
                 continue
             d = json.loads(line)
