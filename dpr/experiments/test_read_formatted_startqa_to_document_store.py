@@ -5,7 +5,7 @@
 from haystack.document_store.faiss import FAISSDocumentStore
 
 from dpr.experiments.retriever import get_retriever
-from dpr.experiments.startQA import populate_document_store_from_startqa
+from dpr.experiments.startQA import populate_document_store_from_strategyqa
 
 
 should_update_document_store = True
@@ -21,7 +21,7 @@ if should_update_document_store:
 
     document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
-    populate_document_store_from_startqa(formated_file_name, document_store)
+    populate_document_store_from_strategyqa(formated_file_name, document_store)
 
     retriever = get_retriever(document_store)
 
