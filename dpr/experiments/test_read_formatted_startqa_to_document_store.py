@@ -1,6 +1,6 @@
-from utils import compute
-
-compute.get_torch()
+# from utils import compute
+#
+# compute.get_torch()
 import json
 import os
 import sys
