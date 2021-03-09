@@ -13,5 +13,6 @@ def get_retriever(document_store):
         max_seq_len_query=64,
         max_seq_len_passage=256,
         use_gpu=True,
-        batch_size=batch_size
+        batch_size=batch_size,
+        embed_title=True
     )
