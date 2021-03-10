@@ -15,7 +15,7 @@ for question in questions:
     positive_cntxs = []
     for id in evidence_ids:
         para_data = paragraphs[id]
-        cntx = {'title': para_data['title'], 'text': para_data['content']}
+        cntx = {'title': para_data['title'], 'text': para_data['content'], 'passage_id': id}
         positive_cntxs.append(cntx)
 
     data_to_write.append(
