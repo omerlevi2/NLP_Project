@@ -1,5 +1,9 @@
 todo:
-what is this? DPR model loaded from ret_save_file 
+
+what is this? DPR model loaded from ret_save_file
+
+how many epochs should dpr be trained for?
+
 train retriver on startegyqa dataset
 
 fix dev set paragraphs:
