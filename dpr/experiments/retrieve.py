@@ -56,7 +56,9 @@ class RetrieverTrainParams:
     batch_size: int = 4
     grad_acc_steps: int = 4
 
+    #todo should change
     num_positives:int = 1
+    #todo should resolve
     num_hard_negatives:int = 1
 
 
