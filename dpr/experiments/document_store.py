@@ -43,3 +43,7 @@ def load_saved_document_store(document_store_class=FAISSDocumentStore):
 
 def get_faiss_document_store():
     return FAISSDocumentStore(faiss_index_factory_str=hyperparams.faiss_index_factory_str, sql_url=sql_url)
+
+
+def save_document_store(document_store, path=document_store_save_path):
+    document_store.save(path)
