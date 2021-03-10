@@ -1,1 +1,16 @@
 training dpr on g4dn.xlarge takes about 3 min per epoch on startegyQA with batch size of 4
+
+
+03/10/2021 15:21:18 - INFO - farm.eval -   loss: 0.02819643210994852
+03/10/2021 15:21:18 - INFO - farm.eval -   task_name: text_similarity
+03/10/2021 15:21:18 - INFO - farm.eval -   acc: 0.9911942762795817
+03/10/2021 15:21:18 - INFO - farm.eval -   f1: 0.9650655021834061
+03/10/2021 15:21:18 - INFO - farm.eval -   acc_and_f1: 0.9781298892314939
+03/10/2021 15:21:18 - INFO - farm.eval -   average_rank: 0.0611353711790393
+03/10/2021 15:21:18 - INFO - farm.eval -   report:
+                precision    recall  f1-score   support
+hard_negative     0.9950    0.9950    0.9950      1588
+     positive     0.9651    0.9651    0.9651       229
+     accuracy                         0.9912      1817
+    macro avg     0.9800    0.9800    0.9800      1817
+ weighted avg     0.9912    0.9912    0.9912      1817
