@@ -29,5 +29,5 @@ for question in questions:
         }
     )
 
-with open('../../data/strategyqa/%s_parsed.json' % split, 'w', encoding='utf-8') as f:
+with open('../../data/strategyqa/%s_dpr.json' % split, 'w', encoding='utf-8') as f:
     json.dump(data_to_write, f)

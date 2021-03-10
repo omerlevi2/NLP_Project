@@ -48,8 +48,8 @@ class RetrieverTrainParams:
     data_dir: str = '../../data/strategyqa'
     save_dir: str = '/saved_models'
 
-    train_filename: str = 'train_parsed.json'
-    dev_filename: str = '../../data/dev_parsed.json'
+    train_filename: str = 'train_dpr.json'
+    dev_filename: str = '../../data/dev_dpr.json'
     test_filename: str = dev_filename
 
     n_epochs: int = 1
