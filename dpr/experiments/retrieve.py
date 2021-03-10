@@ -53,8 +53,8 @@ class RetrieverTrainParams:
     test_filename: str = dev_filename
 
     n_epochs: int = 1
-    batch_size: int = 4
-    grad_acc_steps: int = 4
+    batch_size: int = 8
+    grad_acc_steps: int = 2
 
     # todo should change
     num_positives: int = 1
