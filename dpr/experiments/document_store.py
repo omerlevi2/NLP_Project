@@ -3,10 +3,14 @@ import json
 from haystack.document_store.faiss import FAISSDocumentStore
 from tqdm import tqdm
 
+from dpr.experiments import hyperparams
+
 document_store_save_path = 'ds_save_file'
 
-max_docs_to_write = 100_000
+max_docs_to_write = 500
 write_batch_size = 10_000
+
+sql_url: str = "sqlite:///haystack_test_faiss.db"
 
 
 def populate_document_store_from_strategyqa(formated_file_name, document_store):
@@ -34,5 +38,8 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
 
 
 def load_saved_document_store(document_store_class=FAISSDocumentStore):
-    return document_store_class.load(document_store_save_path)
+    return document_store_class.load(document_store_save_path, sql_url=sql_url)
 
+
+def get_faiss_document_store():
+    return FAISSDocumentStore(faiss_index_factory_str=hyperparams.faiss_index_factory_str, sql_url=sql_url)

@@ -1,6 +1,7 @@
 from haystack.retriever.dense import DensePassageRetriever
 
 batch_size: int = 1024
+retriever_save_path = 'ret_save_file'
 
 
 def get_retriever(document_store):
@@ -10,6 +11,23 @@ def get_retriever(document_store):
         document_store=document_store,
         query_embedding_model=query_model,
         passage_embedding_model=passage_model,
+        max_seq_len_query=64,
+        max_seq_len_passage=256,
+        use_gpu=True,
+        batch_size=batch_size,
+        embed_title=True
+    )
+
+
+def save_retriever(retriever):
+    print('saving retriever to ', retriever_save_path)
+    retriever.save(retriever_save_path)
+
+
+def load_retriever(document_store):
+    return DensePassageRetriever.load(
+        load_dir=retriever_save_path,
+        document_store=document_store,
         max_seq_len_query=64,
         max_seq_len_passage=256,
         use_gpu=True,
