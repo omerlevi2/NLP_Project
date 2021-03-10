@@ -45,7 +45,7 @@ def load_retriever(document_store):
 
 @dataclass
 class RetrieverTrainParams:
-    data_dir: str = '../../data/'
+    data_dir: str = '../../data/strategyqa'
     save_dir: str = '/saved_models'
 
     train_filename: str = 'train_parsed.json'
@@ -56,10 +56,10 @@ class RetrieverTrainParams:
     batch_size: int = 4
     grad_acc_steps: int = 4
 
-    #todo should change
-    num_positives:int = 1
-    #todo should resolve
-    num_hard_negatives:int = 1
+    # todo should change
+    num_positives: int = 1
+    # todo should resolve
+    num_hard_negatives: int = 1
 
 
 def train(retriever, params: RetrieverTrainParams):
