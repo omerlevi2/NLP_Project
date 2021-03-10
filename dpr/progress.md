@@ -1,4 +1,5 @@
 todo:
+what is this? DPR model loaded from ret_save_file 
 train retriver on startegyqa dataset
 
 fix dev set paragraphs:
