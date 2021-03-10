@@ -37,8 +37,8 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
     assert document_store.get_document_count() > 0
 
 
-def load_saved_document_store(document_store_class=FAISSDocumentStore):
-    return document_store_class.load(document_store_save_path, sql_url=sql_url)
+def load_saved_document_store(faiss_index_path=document_store_save_path, document_store_class=FAISSDocumentStore):
+    return document_store_class.load(faiss_index_path, sql_url=sql_url)
 
 
 def get_faiss_document_store():
