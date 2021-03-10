@@ -21,14 +21,15 @@ startQA_corpus = base_data_path + 'corpus-enwiki-20200511-cirrussearch-parasv2.j
 
 all = {}
 count = 0
-limit = 100
+limit = 99999999999
+bar = tqdm(total=32_000_000)
 with open(startQA_corpus, 'r') as corpus:
-    for line in tqdm(corpus):
+    for line in corpus:
         count += 1
-        if count % 10 == 0:
-            print('done ', count)
-        if count > limit:
-            break
+        if count % 1000 == 0:
+            bar.update(1000)
+        # if count > limit:
+        #     break
 
         example = json.loads(line)
         title_ = example['title']
