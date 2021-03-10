@@ -1,7 +1,7 @@
 import json
 from dpr.scripts.utils import get_evidence_ids
 
-split = 'dev'
+split = 'train'
 paragraphs_json = '../../data/strategyqa/strategyqa_%s_paragraphs.json' % split
 train_json = '../../data/strategyqa/%s.json' % split
 with open(paragraphs_json, 'r') as para_file:
@@ -29,4 +29,5 @@ for question in questions:
         }
     )
 
-with open('../../data/strategyqa/%s_parsed.json' % split, 'w', encoding='utf-8') as f: f.write(str(data_to_write))
+with open('../../data/strategyqa/%s_parsed.json' % split, 'w', encoding='utf-8') as f:
+    json.dump(data_to_write, f)
