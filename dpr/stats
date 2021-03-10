@@ -1,0 +1,1 @@
+training dpr on g4dn.xlarge takes about 3 min per epoch on startegyQA with batch size of 4
