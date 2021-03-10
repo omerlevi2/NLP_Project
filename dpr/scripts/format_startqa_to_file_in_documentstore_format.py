@@ -1,23 +1,33 @@
 import json
-import os
-import sys
 
-cwd = os.getcwd()
-print('cwd is: ', cwd)
-sys.path.append(cwd[:cwd.index('pycharm_project_') + + len('pycharm_project_') + 4])
+from dpr.scripts.utils import get_evidence_ids
 
+split = 'dev'
+paragraphs_json = '../../data/strategyqa/strategyqa_%s_paragraphs.json' % split
+train_json = '../../data/strategyqa/%s.json' % split
+with open(paragraphs_json, 'r') as para_file:
+    paragraphs = json.load(para_file)
+with open(train_json, 'r', encoding="utf8") as train_file:
+    questions = json.load(train_file)
 
+data_to_write = []
+for question in questions:
+    evidence_ids = get_evidence_ids(question)
+    positive_cntxs = []
+    for id in evidence_ids:
+        para_data = paragraphs[id]
+        cntx = {'title': para_data['title'], 'text': para_data['content']}
+        positive_cntxs.append(cntx)
 
-doc_dir = "data/nq/"
+    data_to_write.append(
+        {
+            'dataset': 'startegyqa',
+            'question': question['question'],
+            'positive_ctxs': positive_cntxs,
+            'negative_ctxs': [],
+            'hard_negative_ctxs': [],
+            'answers': [str(question['answer'])]
+        }
+    )
 
-startQA_corpus = doc_dir + "dev/" + 'corpus-enwiki-20200511-cirrussearch-parasv2.jsonl'
-formated_file_name=doc_dir + 'dev/' + 'startqa_corpus_formatted_for_documentstore.json'
-
-with open(startQA_corpus, 'r') as corpus:
-    with open(formated_file_name, 'w+') as formatted_corpus:
-        formatted_corpus.write('[\n')
-        for line in corpus:
-            example = json.loads(line)
-            l = {'text': example['para'], 'meta': {'title': example['title']}}
-            formatted_corpus.write(json.dumps(l) + '\n')
-        formatted_corpus.write('\n]')
+with open('../../data/strategyqa/%s_parsed.json' % split, 'w', encoding='utf-8') as f: f.write(str(data_to_write))
