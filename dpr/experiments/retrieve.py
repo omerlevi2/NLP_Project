@@ -46,7 +46,7 @@ def load_retriever(document_store):
 @dataclass
 class RetrieverTrainParams:
     data_dir: str = '../../data/strategyqa'
-    save_dir: str = '/saved_models'
+    save_dir: str = 'saved_models'
 
     train_filename: str = 'train_dpr.json'
     dev_filename: str = 'dev_dpr.json'
