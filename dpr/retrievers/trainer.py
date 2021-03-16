@@ -22,7 +22,7 @@ class RetrieverTrainParams:
     num_hard_negatives: int = 1
 
 
-def train(retriever, params: RetrieverTrainParams):
+def train(retriever, params: RetrieverTrainParams, save=True):
     retriever.train(
         data_dir=params.data_dir,
         train_filename=params.train_filename,
@@ -37,4 +37,5 @@ def train(retriever, params: RetrieverTrainParams):
         num_positives=params.num_positives,
         num_hard_negatives=params.num_hard_negatives
     )
-    save_retriever(retriever, params.save_dir)
+    if save:
+        save_retriever(retriever, params.save_dir)
