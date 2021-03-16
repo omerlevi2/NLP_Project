@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from dpr.retrievers.retrieves import retriever_save_path
+from dpr.retrievers.retrieves import retriever_save_path, save_retriever
 
 
 @dataclass
