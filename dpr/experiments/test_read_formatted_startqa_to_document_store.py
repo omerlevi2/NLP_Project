@@ -1,6 +1,6 @@
 from dpr.experiments.flows import create_new_ds_and_new_retriever
-from dpr.experiments.retrieve import *
 from dpr.experiments.document_store import load_saved_document_store
+from dpr.retrievers.retrieves import load_retriever
 
 should_update_document_store = False
 

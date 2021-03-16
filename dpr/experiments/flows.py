@@ -1,6 +1,6 @@
 from dpr.experiments.document_store import get_faiss_document_store, populate_document_store_from_strategyqa, \
     save_document_store
-from dpr.experiments.retrieve import get_retriever, save_retriever
+from dpr.retrievers.retrieves import get_retriever, save_retriever
 from dpr.experiments.test_read_formatted_startqa_to_document_store import formated_file_name
 
 
