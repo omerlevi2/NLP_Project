@@ -7,7 +7,7 @@ from dpr.experiments import hyperparams
 
 document_store_save_path = 'ds_save_file'
 
-max_docs_to_write = 500
+max_docs_to_write = 5000_000_000_000
 write_batch_size = 10_000
 
 sql_url: str = "sqlite:///haystack_test_faiss.db"
@@ -21,7 +21,11 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
         for line in tqdm(corpus):
             if line.startswith('[') or line.startswith(']'):
                 continue
-            d = json.loads(line)
+            try:
+                d = json.loads(line)
+            except Exception:
+                print('fail parsing to json ', line)
+                continue
             if d['meta']['title']:
                 d['meta']['name'] = d['meta']['title']
             dicts.append(d)
