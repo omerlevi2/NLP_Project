@@ -15,6 +15,15 @@ how many epochs should dpr be trained for?
 num_positives:int = 1
 deal with hard_negative_ctxs... find a reasonable number
 
+plug into existing ir pipeline:
+see paragraphs = {
+            None: lambda **kwargs: None,
+            "IR-Q": self._ir_q,
+            "ORA-P": self._ora_p,
+            "IR-ORA-D": self._ir_ora_d,
+            "IR-D": self._ir_d,
+        }[self._paragraphs_source](**kwargs)
+
 
 done:
 reformat files strategyQA files to include actual evidence moved all our stuff to dpr package
