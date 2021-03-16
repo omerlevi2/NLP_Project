@@ -4,7 +4,7 @@ import sys
 
 cwd = os.getcwd()
 print('cwd is: ', cwd)
-sys.path.append(cwd[:cwd.index('pycharm_project_') + + len('pycharm_project_') + 4])
+# sys.path.append(cwd[:cwd.index('pycharm_project_') + + len('pycharm_project_') + 4])
 
 doc_dir = "data/nq/"
 
