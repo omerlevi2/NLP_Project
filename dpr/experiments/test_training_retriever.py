@@ -12,6 +12,6 @@ if load:
 else:
     retriever = retrieves.get_retriever_for_training()
     trainer.train(retriever,
-                                 trainer.RetrieverTrainParams(num_hard_negatives=0, n_epochs=1))
+                  trainer.RetrieverTrainParams(num_hard_negatives=0, n_epochs=1))
 
 print(3)
