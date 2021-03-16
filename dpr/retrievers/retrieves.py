@@ -25,7 +25,7 @@ def get_retriever_for_training(query_model="facebook/dpr-question_encoder-single
     return get_retriever(InMemoryDocumentStore(), query_model=query_model, passage_model=passage_model)
 
 
-def save_retriever(retriever):
+def save_retriever(retriever, retriever_save_path=retriever_save_path):
     print('saving retriever to ', retriever_save_path)
     retriever.save(retriever_save_path)
 

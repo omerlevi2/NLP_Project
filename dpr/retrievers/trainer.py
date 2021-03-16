@@ -6,7 +6,7 @@ from dpr.retrievers.retrieves import retriever_save_path
 @dataclass
 class RetrieverTrainParams:
     data_dir: str = '../../data/strategyqa'
-    save_dir: str = 'saved_models'
+    save_dir: str = retriever_save_path
 
     train_filename: str = 'train_dpr.json'
     dev_filename: str = 'dev_dpr.json'
@@ -37,7 +37,4 @@ def train(retriever, params: RetrieverTrainParams):
         num_positives=params.num_positives,
         num_hard_negatives=params.num_hard_negatives
     )
-
-    def save_retriever(retriever):
-        print('saving retriever to ', retriever_save_path)
-        retriever.save(retriever_save_path)
+    save_retriever(retriever, params.save_dir)
