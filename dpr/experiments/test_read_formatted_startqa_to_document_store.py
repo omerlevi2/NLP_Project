@@ -8,9 +8,9 @@ doc_dir = 'data/'
 formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
 # formated_file_name = doc_dir + 'sample_startqa_corpus_formatted_for_documentstore.jsonl'
 
-
+formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
 if should_update_document_store:
-    create_new_ds_and_new_retriever()
+    create_new_ds_and_new_retriever(formated_file_name)
 
     print('done')
 
