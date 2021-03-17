@@ -2,9 +2,9 @@ todo:
 1)save whole corups docuemnt store(remember to delete populated dbs)
 2) evaluate metrics properly
 
+test if training works
 
-
-test if training works)
+figure out how much to put in positve_context
 
 1) load trained retriever 3) update embeddings for dataset 4) load trained retriver and updated dataset 5) see it yield
    different results from untrained retriver

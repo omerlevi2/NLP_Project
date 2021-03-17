@@ -10,5 +10,11 @@ class StrategyQADataset:
     test_filename: str = None
 
     def dev_set(self):
-        with open(self.data_dir + '/' + self.dev_filename, 'r', encoding="utf8") as train_file:
+        return self._get_as_json(self.dev_filename)
+
+    def train_set(self):
+        return self._get_as_json(self.train_filename)
+
+    def _get_as_json(self, filename):
+        with open(self.data_dir + '/' + filename, 'r', encoding="utf8") as train_file:
             return json.load(train_file)
