@@ -1,5 +1,7 @@
 import dpr.retrievers.retrieves as retrieves
 import dpr.retrievers.trainer as trainer
+from dpr.retrievers.dataset.StrategyQADataset import StrategyQADataset
+from dpr.retrievers.trainer import RetrieverTrainParams
 import document_store
 from dpr.experiments.flows import update_document_store_embeddings_and_save
 
@@ -17,7 +19,8 @@ else:
     ds = document_store.get_faiss_document_store()
     retriever = retrieves.get_retriever_for_training()
     trainer.train(retriever,
-                  trainer.RetrieverTrainParams(num_hard_negatives=0, n_epochs=1, batch_size=1), save=False)
+                  StrategyQADataset(),
+                  RetrieverTrainParams(num_hard_negatives=0, n_epochs=1, batch_size=1), save=False)
     update_document_store_embeddings_and_save(ds, retriever)
     ds = document_store.load_saved_document_store()
 
