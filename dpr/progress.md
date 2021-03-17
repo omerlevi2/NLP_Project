@@ -1,5 +1,5 @@
 todo:
-1)save whole corups docuemnt store
+1)save whole corups docuemnt store(remember to delete populated dbs)
 2) evaluate metrics properly
 
 
