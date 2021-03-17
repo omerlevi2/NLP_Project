@@ -5,7 +5,7 @@ from dpr.retrievers.trainer import RetrieverTrainParams
 import document_store
 from dpr.experiments.flows import update_document_store_embeddings_and_save
 
-load = False
+load = True
 
 doc_dir = 'data/'
 formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
