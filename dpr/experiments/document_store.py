@@ -1,42 +1,55 @@
 import json
 
+import concurrent
 from haystack.document_store.faiss import FAISSDocumentStore
 from tqdm import tqdm
 
 from dpr.experiments import hyperparams
+import threading
 
 document_store_save_path = 'ds_save_file'
 
 max_docs_to_write = 5000_000_000_000
-write_batch_size = 10_000
+write_batch_size = 200_000
 
-sql_url: str = "sqlite:///haystack_test_faiss.db"
+# sql_url: str = "sqlite:///haystack_test_faiss.db"
+sql_url: str = "sqlite:///haystack_stratqa-faiss.db"
 
 
 def populate_document_store_from_strategyqa(formated_file_name, document_store):
     dicts = []
 
     with open(formated_file_name, 'r') as corpus:
-        counter = 1
-        for line in tqdm(corpus):
-            if line.startswith('[') or line.startswith(']'):
-                continue
-            try:
-                d = json.loads(line)
-            except Exception:
-                print('fail parsing to json ', line)
-                continue
-            if d['meta']['title']:
-                d['meta']['name'] = d['meta']['title']
-            dicts.append(d)
-            counter += 1
-            if counter % write_batch_size == 0:
-                document_store.write_documents(dicts)
-                dicts = []
-                print('wrote ', counter, ' documents')
-            if counter > max_docs_to_write:
-                break
-    document_store.write_documents(dicts)
+        def iter_jsons():
+            counter = 1
+            for line in tqdm(corpus):
+                if line.startswith('[') or line.startswith(']'):
+                    continue
+                try:
+                    d = json.loads(line)
+                except Exception:
+                    print('fail parsing to json ', line)
+                    continue
+                if d['meta']['title']:
+                    d['meta']['name'] = d['meta']['title']
+                dicts.append(d)
+                counter += 1
+                if counter % write_batch_size == 0:
+                    # document_store.write_documents(dicts)
+                    print('wrote ', counter, ' documents')
+                    yield dicts
+                    dicts = []
+                if counter > max_docs_to_write:
+                    yield dicts
+                    break
+            yield dicts
+
+    def write_to_document_store(dicts):
+        print('writings ', len(dicts), ' documents')
+        document_store.write_documents(dicts)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        executor.map(write_to_document_store, iter_jsons())
     print('done writing')
     assert document_store.get_document_count() > 0
 
@@ -52,3 +65,24 @@ def get_faiss_document_store():
 
 def save_document_store(document_store, path=document_store_save_path):
     document_store.save(path)
+
+
+def pop(l):
+    i = 0
+    print('first loop')
+    for x in range(100000):
+        i = i * i + x * 3 + 4
+    print('second loop')
+    for x in range(10000):
+        l.append(x)
+
+    print('done')
+
+
+def doit():
+    l = []
+    x = threading.Thread(target=pop, args=(l,))
+    x.start()
+    l = []
+    while len(l) == 0:
+        print('waiting')
