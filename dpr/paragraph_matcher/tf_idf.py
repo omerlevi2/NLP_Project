@@ -1,4 +1,5 @@
-from typing import List,Dict
+from dpr.paragraph_matcher.indexing_config import PATH_DOC_TERM_FREQ, PATH_PRE_FINAL_INDEX
+from typing import List
 from nltk.tokenize import word_tokenize 
 from collections import Counter
 import numpy as np
@@ -8,6 +9,7 @@ import pickle
 from tqdm import tqdm
 from os import path
 import os
+from matplotlib import pyplot as plt
 
 from nltk.tokenize import word_tokenize 
 from nltk.stem.porter import PorterStemmer
@@ -26,6 +28,7 @@ PATH_CORPUS_STRQA = "C:\\Users\\Omer\\Documents\\NLP class\\strategy_unzip\\corp
 PATH_INV_IDX = 'dpr\paragraph_matcher\index\\inv_index_'
 PATH_MAPPER = 'dpr\paragraph_matcher\index\mapper.pickle'
 PATH_NUM_DOCS_PASSED = "dpr\paragraph_matcher\index\last_inv_idx_saved.txt"
+PATH_DOC_FREQ = "dpr\paragraph_matcher\index\doc_freq"
 
 
 def convert_to_passage(para: dict):
@@ -43,9 +46,7 @@ class TfIdf:
         self.inverted_index = {}
         self.doc_norms = {}
         self.n_docs = 0
-        # self.sentence_preprocesser = preprocess_sentence
         self.mapper = {}
-        # self.bow_path = BOW_PATH
 
     def update_counts_and_probabilities(self, sentence :List[str],document_id:int) -> None:
         sentence_len = len(sentence)
@@ -70,52 +71,68 @@ class TfIdf:
             if(len(word)>1):
                 output_sentence.append(word)
         return output_sentence
+    
+    def load_index(self):
+        self.inverted_index = pickle.load(open(PATH_PRE_FINAL_INDEX,'rb'))
+        self.document_term_frequency = pickle.load(open(PATH_DOC_TERM_FREQ,'rb'))
             
         
     def fit(self,final_processing:bool) -> None:
+        len_paras = []
         if(not final_processing):
             with open(PATH_CORPUS_STRQA + '\\enwiki-20200511-cirrussearch-parasv2.jsonl','r') as f:
-                not_first_run = path.exists("dpr\paragraph_matcher\index\last_inv_idx_saved.txt")
-                docs_passed = self.get_last_run() if not_first_run else 0 #save a const var for later comparison
-                self.n_docs = docs_passed
+                # x = json.load(f)
+                # not_first_run = path.exists("dpr\paragraph_matcher\index\last_inv_idx_saved.txt")
+                # docs_passed = self.get_last_run() if not_first_run else 0 #save a const var for later comparison
+                # self.n_docs = docs_passed
                 counter = 0
                 for chunk in tqdm(f):
                     counter += 1
-                    if(counter<=self.n_docs): continue
-                    if((counter-1 == docs_passed) and docs_passed != 0):
-                        self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
-                        # self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
-                    self.n_docs += 1
+                    # if(counter < 14200989):continue
+                    # if(counter > 35000100):
                     chunk = ast.literal_eval(chunk)
-                    # para = word_tokenize(chunk['para'])
-                    para = self.preprocess_sentence(chunk['para'])
-                    # print(para)
-                    # print(len(para))
-                    # for sentence in chunck:
-                    self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
-                    # if not isinstance(para, str):
-                    #     continue
-                    # sentence = self.sentence_preprocesser(sentence)
-                    if para:
-                        self.update_counts_and_probabilities(para,self.n_docs)
-                        # print(self.inverted_index)
-                        # backup every 5 million iterations
-                        if(self.n_docs % (5*(10**6)) == 0):
-                            os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
-                            file_prefix = str(int(self.n_docs/(10**6)))
-                            self.save_inv_idx(file_prefix)
-                            self.save_last_doc_saved()
-                            self.save_mapper()
-                            self.inverted_index = {}
-            file_prefix = str(int(self.n_docs/(10**6)))
-            self.save_inv_idx(file_prefix)
-            self.save_last_doc_saved()
-            self.save_mapper()
+                    # print(chunk['para'])
+                    # print('------------------------------------------------------------------------------------------------')
+            #         if(counter<=self.n_docs): continue
+            #         if((counter-1 == docs_passed) and docs_passed != 0):
+            #             self.mapper = pickle.load(open(PATH_MAPPER,'rb'))
+            #             self.inverted_index = pickle.load(open(PATH_INV_IDX,'rb'))
+                    self.n_docs += 1
+                    
+                    # chunk = ast.literal_eval(chunk)
+                    # para = self.preprocess_sentence(chunk['para'])
+                    len_paras.append(len(chunk['para']))
+                    
+                    if(counter==1000000000):
+                        plt.xlim([min(len_paras), max(len_paras)])
+                        bins = np.arange(0, 10000, 5)
+                        plt.hist(len_paras, bins=bins)
+                        plt.show()
+                        print('')
+            #         self.mapper[self.n_docs] = (chunk['docid'],chunk['para_id'])
+            #         # if not isinstance(para, str):
+            #         #     continue
+            #         if para:
+            #             self.update_counts_and_probabilities(para,self.n_docs)
+            # #             # backup every 5 million iterations
+            #             if(self.n_docs % (5*(10**6)) == 0):
+            #                 self.back_up_idx()
+            # file_prefix = str(int(self.n_docs/(10**6)))
+            # self.save_inv_idx(file_p5refix)
+            # self.save_last_doc_saved()
+            # self.save_mapper()
+            # self.save_doc_term_freq()
+            
         else:
-            self.inverted_index = pickle.load(open('index\final_dict','rb'))
+            self.inverted_index = pickle.load(open('dpr\paragraph_matcher\index\inv_index_36','rb'))
+            self.document_term_frequency = pickle.load(open(PATH_DOC_TERM_FREQ,'rb'))
+            self.n_docs = 36617357
             self.compute_word_document_frequency()
             self.update_inverted_index_with_tf_idf_and_compute_document_norm()
-             
+            self.save_inv_idx('final_36_inv_idx')
+            pickle.dump(self.word_document_frequency, open('dpr\paragraph_matcher\index\word_doc_freq','wb'))
+            pickle.dump(self.doc_norms, open('dpr\paragraph_matcher\index\doc_norms','wb'))
+
     def compute_word_document_frequency(self):
         for word in self.inverted_index.keys():
             self.word_document_frequency[word] = len(self.inverted_index[word])
@@ -128,7 +145,7 @@ class TfIdf:
                 if doc not in self.doc_norms:
                     self.doc_norms.update({doc:0}) 
                 self.doc_norms[doc] += (self.inverted_index[term][doc]**2)
-        
+        print('g')
         for doc in self.doc_norms.keys():
             self.doc_norms[doc] = np.sqrt(self.doc_norms[doc]) 
 
@@ -151,59 +168,22 @@ class TfIdf:
         with open(PATH_MAPPER,'wb') as out:
             pickle.dump(self.mapper,out)
 
-class DocumentRetriever:
-    def __init__(self, tf_idf):
-        self.sentence_preprocesser = self.preprocess_sentence
-        self.vocab = set(tf_idf.unigram_count.keys())
-        self.n_docs = tf_idf.n_docs
-        self.inverted_index = tf_idf.inverted_index
-        self.word_document_frequency = tf_idf.word_document_frequency
-        self.doc_norms = tf_idf.doc_norms
+    def save_doc_term_freq(self):
+        with open(PATH_DOC_FREQ,'wb') as out:
+                pickle.dump(self.document_term_frequency,out)
+    
+    def back_up_idx(self):
+        os.makedirs('dpr\paragraph_matcher\index', exist_ok=True)
+        file_prefix = str(int(self.n_docs/(10**6)))
+        self.save_inv_idx(file_prefix)
+        self.save_last_doc_saved()
+        self.save_mapper()
+        self.save_doct_term_freq()
+        self.inverted_index = {}
 
-    def rank(self, query: Dict[str, int], documents: Dict[str, Counter], metric: str) -> Dict[str, float]:
-        result = {}  # key: DocID , value : float , simmilarity to query
-        query_len = np.sum(np.array(list(query.values())))
-        for term, count in query.items(): #in this loop we're updating the query's weights 
-            query[term] = (count / query_len * np.log10(tf_idf.n_docs / tf_idf.word_document_frequency[term]))
-            for doc, freq in documents[term].items():
-                if (doc not in result):
-                    result.update({doc: 0})
-                if metric == 'inner_product':
-                    result[doc] += query[term] * freq
-            
-                if metric == 'cosine':
-            
-                    result[doc] += (query[term] * freq / self.doc_norms[doc])
 
-                
-        return result
-
-    def sort_and_retrieve_k_best(self, scores: Dict[str, float], k: int):
-        return list({k: v for k, v in sorted(scores.items(), key=lambda item: item[1],reverse=True)})[:k]
-        
-
-    def reduce_query_to_counts(self, query: List) :
-        return dict(Counter(query)) # rank get Dict as input so we used this cast (even that a counter is a dict)
-        
-
-    def get_top_k_documents(self, query: str, metric: str, k=5) -> List[str]:
-        query = self.sentence_preprocesser(query)
-        query = [word for word in query if word in self.vocab]  # filter nan
-        query_bow = self.reduce_query_to_counts(query)
-        relavant_documents = {word: self.inverted_index.get(word) for word in query}
-        ducuments_with_similarity = self.rank(query_bow, relavant_documents, metric)
-        return self.sort_and_retrieve_k_best(ducuments_with_similarity, k)
-        
 
 if __name__ == '__main__':
-    # path = PATH_NATURAL_QUES
-    # with open(path + '\\simplified-nq-train.jsonl','rb') as f:
-    #     for line in f: 
-    #         line = json.loads(line.decode('utf-8'))
-    #         long_passage = convert_to_passage(line)
-    #         if(len(long_passage)==0):
-    #             continue
-    #         print(long_passage)
 
     tf_idf = TfIdf()
-    tf_idf.fit(final_processing=True)
+    tf_idf.fit(final_processing=False)
