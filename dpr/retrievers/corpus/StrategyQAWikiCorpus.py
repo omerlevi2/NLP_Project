@@ -1,3 +1,4 @@
+import json
 from haystack.preprocessor.utils import fetch_archive_from_http
 
 
@@ -8,3 +9,20 @@ class StrategyQAWikiCorpus:
 
     def filepath(self):
         return 'corpus/stratCorpus/startqa_corpus_formatted_for_documentstore.json'
+
+    def iter_jsons(self):
+        with open(self.filepath(), 'r') as corpus:
+            for line in corpus:
+                if line.startswith('[') or line.startswith(']'):
+                    continue
+                try:
+                    d = json.loads(line)
+                except Exception:
+                    print('fail parsing to json ', line)
+                    continue
+                if len(d['text']) > 1200:
+                    continue
+                if d['meta']['title']:
+                    d['meta']['name'] = d['meta']['title']
+
+            yield d
