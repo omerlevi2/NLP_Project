@@ -24,5 +24,6 @@ class StrategyQAWikiCorpus:
                     continue
                 if d['meta']['title']:
                     d['meta']['name'] = d['meta']['title']
+                yield d
 
             yield d
