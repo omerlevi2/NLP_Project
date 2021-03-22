@@ -28,6 +28,7 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
             for line in corpus:
                 if line.startswith('[') or line.startswith(']'):
                     continue
+                counter += 1
                 try:
                     d = json.loads(line)
                 except Exception:
@@ -38,7 +39,7 @@ def populate_document_store_from_strategyqa(formated_file_name, document_store):
                 if d['meta']['title']:
                     d['meta']['name'] = d['meta']['title']
                 dicts.append(d)
-                counter += 1
+
                 if counter % print_every == 0:
                     print('wrote ', counter, ' documents')
                 if counter % write_batch_size == 0:
