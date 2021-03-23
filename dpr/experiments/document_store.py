@@ -84,13 +84,14 @@ def save_document_store(document_store, path=document_store_save_path):
 
 def get_elastic_document_store():
     print('starting elastic docker')
-    os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
-    time.sleep(10)
+    if not 'elasticsearch' in os.popen('docker ps').read():
+        os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
+        time.sleep(10)
+        print(os.popen(
+            """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'"""))
+        print(os.popen(
+            """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'"""))
+        time.sleep(5)
     elastic_ds = ElasticsearchDocumentStore(host="localhost", username="", password="",
                                             index="document")
-    os.popen(
-        """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'""")
-    time.sleep(5)
-    os.popen(
-        """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'""")
     return elastic_ds
