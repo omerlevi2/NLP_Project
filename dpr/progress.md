@@ -2,20 +2,18 @@ todo:
 1)save whole corups docuemnt store(remember to delete populated dbs)
 2) evaluate metrics properly
 
+
+
 test if training works
 
-figure out how much to put in positve_context
+figure out how much to put in positve_context..maybe can just use full and it will work.. if not need to just buff up not down
 
 1) load trained retriever 3) update embeddings for dataset 4) load trained retriver and updated dataset 5) see it yield
    different results from untrained retriver
-
-what is this? DPR model loaded from ret_save_file
-
-how many epochs should dpr be trained for?
+   
+how many epochs should dpr be trained for? yes:its fine tuning so less than 100 no:--100 on small dataset--
 
 # this should be a larger number.see comment on notion on uneven number of positives
-
-num_positives:int = 1 deal with hard_negative_ctxs... find a reasonable number
 
 plug into existing ir pipeline:
 see paragraphs = { None: lambda **kwargs: None,
@@ -26,3 +24,4 @@ see paragraphs = { None: lambda **kwargs: None,
 
 done:
 reformat files strategyQA files to include actual evidence moved all our stuff to dpr package
+hard_negatives: looks like not that important for nq
