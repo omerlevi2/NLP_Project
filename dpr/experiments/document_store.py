@@ -4,7 +4,6 @@ import time
 from haystack.document_store.elasticsearch import ElasticsearchDocumentStore
 from haystack.document_store.faiss import FAISSDocumentStore
 
-
 from dpr.experiments import hyperparams
 
 document_store_save_path = 'ds_save_file'
@@ -84,6 +83,7 @@ def save_document_store(document_store, path=document_store_save_path):
 
 
 def get_elastic_document_store():
+    print('starting elastic docker')
     os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
     time.sleep(10)
     elastic_ds = ElasticsearchDocumentStore(host="localhost", username="", password="",
