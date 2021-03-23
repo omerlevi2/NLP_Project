@@ -22,8 +22,8 @@ else:
     # here possibliy create from scratch.
     ds = document_store.get_faiss_document_store()
     print('document count:', ds.get_document_count())
-    if populate_doucment_store:
-        ds = flows.create_faiss_db_on_stratqa_corpus()
+    # if populate_doucment_store:
+    #     ds = flows.create_faiss_db_on_stratqa_corpus()
     if train:
         retriever = retrieves.get_retriever_for_training()
         trainer.train(retriever,
