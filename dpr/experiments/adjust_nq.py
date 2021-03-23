@@ -38,7 +38,6 @@ with open('new_nq_train.json', 'w') as new_nq_file:
         if len(adjusted_contexts) > 0:
             took += 1
             bar.update(1)
-            # TODO HERE ADD , NONE
             sample['negative_ctxs'] = []
             sample['positive_ctxs'] = adjusted_contexts
             new_nq_file.write(json.dumps(sample) + '\n')
