@@ -10,10 +10,12 @@ class StrategyQAWikiCorpus:
     def filepath(self):
         return 'corpus/stratCorpus/startqa_corpus_formatted_for_documentstore.json'
 
-    def iter_jsons(self):
+    def iter_jsons(self, offset=0):
         with open(self.filepath(), 'r') as corpus:
-            for line in corpus:
+            for i, line in enumerate(corpus):
                 if line.startswith('[') or line.startswith(']'):
+                    continue
+                if i < offset:
                     continue
                 try:
                     d = json.loads(line)
@@ -27,3 +29,14 @@ class StrategyQAWikiCorpus:
                 yield d
 
             yield d
+
+    def iter_json_batches(self, batch_size=10_000, offset=0, max_size=999999999999):
+        dicts = []
+        for i, json in enumerate(self.iter_jsons(offset=offset), start=1):
+            dicts.append(json)
+            if i % batch_size == 0:
+                yield dicts
+                dicts = []
+            if i > max_size:
+                break
+        yield dicts
