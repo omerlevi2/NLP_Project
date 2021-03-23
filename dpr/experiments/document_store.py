@@ -1,8 +1,9 @@
 import json
-
-import concurrent
+import os
+import time
+from haystack.document_store.elasticsearch import ElasticsearchDocumentStore
 from haystack.document_store.faiss import FAISSDocumentStore
-from tqdm import tqdm
+
 
 from dpr.experiments import hyperparams
 
@@ -80,3 +81,16 @@ def get_faiss_document_store():
 
 def save_document_store(document_store, path=document_store_save_path):
     document_store.save(path)
+
+
+def get_elastic_document_store():
+    os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
+    time.sleep(10)
+    elastic_ds = ElasticsearchDocumentStore(host="localhost", username="", password="",
+                                            index="document")
+    os.popen(
+        """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'""")
+    time.sleep(5)
+    os.popen(
+        """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'""")
+    return elastic_ds
