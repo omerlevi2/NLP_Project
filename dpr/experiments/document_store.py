@@ -79,6 +79,8 @@ def get_faiss_document_store():
 
 
 def save_document_store(document_store, path=document_store_save_path):
+    if isinstance(document_store,ElasticsearchDocumentStore):
+        return
     document_store.save(path)
 
 
