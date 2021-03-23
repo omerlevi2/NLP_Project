@@ -40,19 +40,18 @@ def retrieve_inner(context):
     # return
 
 
-for sample in NQDataset().train_set():
+for i, sample in enumerate(NQDataset().train_set()):
     positive_contexts = [x['text'] for x in sample['positive_ctxs']]
     start_q = time.time()
     with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
         executor.map(retrieve_inner, positive_contexts)
-    print('question took', time.time() - start_q)
+    print('question', i, 'took', time.time() - start_q)
     # prob = retrieve[0].probability
     # print('prob', prob)
     # print('score', retrieve[0].score)
     # print('took', time.time() - start)
 
     print('\n\n')
-
 
 print('taking', took / total)
 
