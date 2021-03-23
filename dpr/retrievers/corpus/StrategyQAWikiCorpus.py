@@ -18,9 +18,10 @@ class StrategyQAWikiCorpus:
                 if i < offset:
                     continue
                 try:
+                    line = line.strip()
                     d = json.loads(line)
-                except Exception:
-                    print('fail parsing to json ', line)
+                except Exception as e:
+                    print('fail parsing to json ', line, e)
                     continue
                 if len(d['text']) > 1200:
                     continue

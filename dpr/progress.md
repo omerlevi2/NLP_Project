@@ -1,7 +1,7 @@
 todo:
 1) create adjusted natural questions:
-   * print how much used so far
    * drop negative contexts
+     * check if old nq or corpus is in ../../data so I can delete it and clear some space 
    * print to file in the same format
 
 2) evaluate metrics properly
