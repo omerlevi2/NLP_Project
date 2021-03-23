@@ -1,5 +1,9 @@
 todo:
-1)save whole corups docuemnt store(remember to delete populated dbs)
+1) create adjusted natural questions:
+   * print how much used so far
+   * drop negative contexts
+   * print to file in the same format
+
 2) evaluate metrics properly
 
 
