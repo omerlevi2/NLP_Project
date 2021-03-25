@@ -27,6 +27,7 @@ def retrieve_inner(context, result):
 
 bar = tqdm(total=307_000)
 took = 0
+raise Exception #do not overwrite this fail
 with open('new_nq_dev.json', 'w') as new_nq_file:
     for i, sample in enumerate(NQDataset().dev_set()):
         if len(sample['positive_ctxs']) > 8:
