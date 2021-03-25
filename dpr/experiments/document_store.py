@@ -86,7 +86,7 @@ def save_document_store(document_store, path=document_store_save_path):
 
 def get_elastic_document_store():
     print('starting elastic docker')
-    if not 'elasticsearch' in os.popen('docker ps').read():
+    if 'elasticsearch' not in os.popen('docker ps').read():
         os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
         time.sleep(25)
         print(os.popen(
