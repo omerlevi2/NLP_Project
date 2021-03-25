@@ -7,8 +7,9 @@ import document_store
 from dpr.experiments.flows import update_document_store_embeddings_and_save
 
 load = False
-populate_doucment_store = True
-train = False
+populate_doucment_store = False
+train = True
+update_embeddings = False
 
 doc_dir = 'data/'
 formated_file_name = doc_dir + 'startqa_corpus_formatted_for_documentstore.json'
@@ -20,7 +21,7 @@ if load:
     retriever = retrieves.load_retriever(ds)
 else:
     # here possibliy create from scratch.
-    ds = document_store.get_faiss_document_store()
+    ds = document_store.get_elastic_document_store()
     print('document count:', ds.get_document_count())
     # if populate_doucment_store:
     #     ds = flows.create_faiss_db_on_stratqa_corpus()
@@ -28,12 +29,13 @@ else:
         retriever = retrieves.get_retriever_for_training()
         trainer.train(retriever,
                       StrategyQADataset(),
-                      RetrieverTrainParams(num_hard_negatives=0, n_epochs=1, batch_size=1), save=False)
-        update_document_store_embeddings_and_save(ds, retriever)
-        ds = document_store.load_saved_document_store()
+                      RetrieverTrainParams(num_hard_negatives=0, n_epochs=2, batch_size=16), save=True)
     else:
         retriever = retrieves.load_retriever(ds)
+    if update_embeddings:
+        update_document_store_embeddings_and_save(ds, retriever)
+    # ds = document_store.load_saved_document_store()
 
-res = retriever.retrieve('West')
+res = retriever.retrieve('"who sings does he love me with reba')
 print(res)
 print(ds.get_document_count())
