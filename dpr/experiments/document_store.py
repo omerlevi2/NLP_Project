@@ -84,10 +84,11 @@ def save_document_store(document_store, path=document_store_save_path):
     document_store.save(path)
 
 
+elastic_docker_id = """fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf"""
 def get_elastic_document_store():
     print('starting elastic docker')
     if 'elasticsearch' not in os.popen('docker ps').read():
-        os.popen("""docker start fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf""")
+        os.popen("""docker start %s""" % elastic_docker_id)
         time.sleep(25)
         print(os.popen(
             """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'"""))
