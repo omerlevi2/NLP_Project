@@ -1,7 +1,7 @@
 import json
 from dpr.scripts.utils import get_evidence_ids
 
-split = 'train'
+split = 'dev'
 paragraphs_json = '../../data/strategyqa/strategyqa_%s_paragraphs.json' % split
 train_json = '../../data/strategyqa/%s.json' % split
 with open(paragraphs_json, 'r') as para_file:
