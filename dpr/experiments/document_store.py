@@ -79,13 +79,27 @@ def get_faiss_document_store():
 
 
 def save_document_store(document_store, path=document_store_save_path):
-    if isinstance(document_store,ElasticsearchDocumentStore):
+    if isinstance(document_store, ElasticsearchDocumentStore):
         return
     document_store.save(path)
 
 
 elastic_docker_id = """fd2e31d49ed7f485d35f974594c404090269e20b9dc0ca9543d9c4a5bf626faf"""
+
+
 def get_elastic_document_store():
+    def is_first_run():
+        existing_images = os.popen('docker images').read()
+        return 'elasticsearch' in existing_images and '7.9.2' in existing_images
+
+    def create_image_and_volume():
+        os.popen('mkdir -m777 -p elasticsearch/data')
+        os.popen(
+            'docker run -d -p 9200:9200 -e "discovery.type=single-node" -v $PWD/elasticsearch/data:/usr/share/elasticsearch/data --name elasticsearch elasticsearch:7.9.2')
+
+    if is_first_run():
+        create_image_and_volume()
+
     print('starting elastic docker')
     if 'elasticsearch' not in os.popen('docker ps').read():
         os.popen("""docker start %s""" % elastic_docker_id)
