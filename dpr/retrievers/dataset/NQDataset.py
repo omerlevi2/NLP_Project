@@ -9,11 +9,15 @@ class NQDataset:
         fetch_archive_from_http(self.s3_url_dev, output_dir='corpus/dev')
         fetch_archive_from_http(self.s3_url_train, output_dir='corpus/train')
 
+        self.data_dir = 'corpus'
+        self.train_filename = 'train/biencoder-nq-train.json'
+        self.dev_filename = 'dev/biencoder-nq-dev.json'
+
     def train_set(self):
-        return self._iter_set('corpus/train/biencoder-nq-train.json')
+        return self._iter_set('corpus/%s' % self.train_filename)
 
     def dev_set(self):
-        return self._iter_set('corpus/dev/biencoder-nq-dev.json')
+        return self._iter_set('corpus/%s' % self.dev_filename)
 
     def _iter_set(self, dpr_train_split):
         stack = 0
