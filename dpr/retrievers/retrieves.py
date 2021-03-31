@@ -34,9 +34,9 @@ def save_retriever(retriever, retriever_save_path=retriever_save_path):
     retriever.save(retriever_save_path)
 
 
-def load_retriever(document_store):
+def load_retriever(document_store, load_dir=retriever_save_path):
     return DensePassageRetriever.load(
-        load_dir=retriever_save_path,
+        load_dir=load_dir,
         document_store=document_store,
         max_seq_len_query=64,
         max_seq_len_passage=256,
