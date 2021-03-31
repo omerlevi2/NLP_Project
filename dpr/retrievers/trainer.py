@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from haystack.retriever.dense import DensePassageRetriever
 
 from dpr.retrievers.retrieves import retriever_save_path, save_retriever
 
@@ -17,7 +18,7 @@ class RetrieverTrainParams:
     num_hard_negatives: int = 1
 
 
-def train(retriever, dataset, params: RetrieverTrainParams, save=True):
+def train(retriever: DensePassageRetriever, dataset, params: RetrieverTrainParams, save=True):
     retriever.train(
         data_dir=dataset.data_dir,
         train_filename=dataset.train_filename,
@@ -26,7 +27,7 @@ def train(retriever, dataset, params: RetrieverTrainParams, save=True):
         batch_size=params.batch_size,
         grad_acc_steps=params.grad_acc_steps,
         save_dir=params.save_dir,
-        evaluate_every=500,
+        evaluate_every=20,
         embed_title=True,
         num_positives=params.num_positives,
         num_hard_negatives=params.num_hard_negatives
