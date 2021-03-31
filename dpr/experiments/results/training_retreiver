@@ -1,0 +1,52 @@
+NQ pretrained on NQ evaluated on  Adjusted NQ(strategy qa paragraphs):
+  precision    recall  f1-score   support
+
+hard_negative     0.9991    0.9991    0.9991    201887
+     positive     0.9725    0.9725    0.9725      6515
+
+     accuracy                         0.9983    208402
+    macro avg     0.9858    0.9858    0.9858    208402
+ weighted avg     0.9983    0.9983    0.9983    208402
+
+
+NQ trained 1 epoch on NQ adjusted(strategy qa paragraphs):
+                precision    recall  f1-score   support
+hard_negative     0.9990    0.9990    0.9990    201887
+     positive     0.9693    0.9693    0.9693      6515
+
+     accuracy                         0.9981    208402
+    macro avg     0.9842    0.9842    0.9842    208402
+ weighted avg     0.9981    0.9981    0.9981    208402
+
+
+
+
+
+strategy only:
+STRAT:
+                precision    recall  f1-score   support
+
+hard_negative     0.9973    0.9973    0.9973      6387
+     positive     0.9179    0.9179    0.9179       207
+
+     accuracy                         0.9948      6594
+    macro avg     0.9576    0.9576    0.9576      6594
+ weighted avg     0.9948    0.9948    0.9948      6594
+
+EPOCH 1:(OLD)
+hard_negative     0.9987    0.9987    0.9987      6989
+     positive     0.9607    0.9607    0.9607       229
+
+     accuracy                         0.9975      7218
+    macro avg     0.9797    0.9797    0.9797      7218
+ weighted avg     0.9975    0.9975    0.9975      7218
+
+               precision    recall  f1-score   support
+hard_negative     0.9973    0.9973    0.9973      6387
+     positive     0.9179    0.9179    0.9179       207
+
+     accuracy                         0.9948      6594
+    macro avg     0.9576    0.9576    0.9576      6594
+ weighted avg     0.9948    0.9948    0.9948      6594
+
+
