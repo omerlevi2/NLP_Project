@@ -35,6 +35,7 @@ def save_retriever(retriever, retriever_save_path=retriever_save_path):
 
 
 def load_retriever(document_store, load_dir=retriever_save_path):
+    print('loading from ', load_dir)
     return DensePassageRetriever.load(
         load_dir=load_dir,
         document_store=document_store,
