@@ -110,5 +110,5 @@ def get_elastic_document_store():
             """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'"""))
         time.sleep(5)
     elastic_ds = ElasticsearchDocumentStore(host="localhost", username="", password="",
-                                            index="document")
+                                            index="document",return_embedding=True)
     return elastic_ds
