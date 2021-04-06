@@ -1,8 +1,12 @@
 import json
 import os
 import time
+from itertools import islice
+
+from elasticsearch.helpers import bulk
 from haystack.document_store.elasticsearch import ElasticsearchDocumentStore
 from haystack.document_store.faiss import FAISSDocumentStore
+from haystack.retriever.base import BaseRetriever
 
 from dpr.experiments import hyperparams
 
@@ -110,5 +114,45 @@ def get_elastic_document_store():
             """curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'"""))
         time.sleep(5)
     elastic_ds = ElasticsearchDocumentStore(host="localhost", username="", password="",
-                                            index="document",return_embedding=True)
+                                            index="document", return_embedding=True)
     return elastic_ds
+
+
+def update_elastic_embeddings(document_store: ElasticsearchDocumentStore, retriever: BaseRetriever,
+                              update_existing=False):
+    index = document_store.index
+
+    result = document_store.get_all_documents_generator(index)
+    for document_batch in get_batches_from_generator(result, 10_000):
+        if len(document_batch) == 0:
+            break
+        if not update_existing:
+            # take only documents with no embeddings
+            document_batch = [d for d in document_batch if d.embedding is None]
+        if len(document_batch) == 0:
+            continue
+        embeddings = retriever.embed_passages(document_batch)  # type: ignore
+        assert len(document_batch) == len(embeddings)
+        print('updating ',len(document_batch), ' embeddings')
+
+        doc_updates = []
+        for doc, emb in zip(document_batch, embeddings):
+            update = {"_op_type": "update",
+                      "_index": index,
+                      "_id": doc.id,
+                      "doc": {document_store.embedding_field: emb.tolist()},
+                      }
+            doc_updates.append(update)
+
+        bulk(document_store.client, doc_updates, request_timeout=300, refresh=document_store.refresh_type)
+
+
+def get_batches_from_generator(iterable, n):
+    """
+    Batch elements of an iterable into fixed-length chunks or blocks.
+    """
+    it = iter(iterable)
+    x = tuple(islice(it, n))
+    while x:
+        yield x
+        x = tuple(islice(it, n))
