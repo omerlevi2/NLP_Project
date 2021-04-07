@@ -26,7 +26,7 @@ from src.data.dataset_readers.utils.elasticsearch_utils import (
 
 logger = logging.getLogger(__name__)
 
-QUERIES_CACHE_PATH = "data/strategyqa/queries_cache.json"
+QUERIES_CACHE_PATH = "data/strategyqa/queries_cache_dpr.json"
 
 
 @DatasetReader.register("strategy_qa_reader")
@@ -260,7 +260,7 @@ class StrategyQAReader(BaseDatasetReader):
         """
 
         paragraphs = {
-            None: lambda **kwargs: None,
+            None: lambda **kwargs: {},
             "IR-Q": self._ir_q,
             "ORA-P": self._ora_p,
             "IR-ORA-D": self._ir_ora_d,
