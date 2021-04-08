@@ -17,6 +17,8 @@ class RetrieverTrainParams:
     # todo should resolve
     num_hard_negatives: int = 1
     evaluate_every: int = 100
+    learning_rate: float = 1.e-5
+
 
 
 def train(retriever: DensePassageRetriever, dataset, params: RetrieverTrainParams, save=True):
@@ -30,6 +32,7 @@ def train(retriever: DensePassageRetriever, dataset, params: RetrieverTrainParam
         save_dir=params.save_dir,
         evaluate_every=params.evaluate_every,
         embed_title=True,
+        learning_rate=params.learning_rate,
         num_positives=params.num_positives,
         num_hard_negatives=params.num_hard_negatives
     )
