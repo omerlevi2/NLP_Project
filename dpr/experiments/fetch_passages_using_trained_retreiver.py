@@ -9,7 +9,7 @@ import torch
 
 qa_dataset = StrategyQADataset()
 ds = document_store.get_elastic_document_store()
-retriever = retrieves.load_retriever(ds, 'ret_save_file_nq_then_strat')
+retriever = retrieves.load_retriever(ds, 'ret_save_file')
 
 
 # embeded = retriever.embed_queries(['Who shot yeah'])

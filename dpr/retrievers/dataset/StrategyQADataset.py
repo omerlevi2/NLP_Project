@@ -4,12 +4,13 @@ import json
 
 @dataclass
 class StrategyQADataset:
-    # data_dir: str = 'data/strategyqa'
-    data_dir: str = 'data/train_dpr_strategyqa'
-    train_filename: str = 'split_train_dpr.json'
+    data_dir: str = 'data/strategyqa'
+    # data_dir: str = 'data/train_dpr_strategyqa'
     # train_filename: str = 'split_train_dpr.json'
+    train_filename: str = 'train_dpr.json'
     # train_filename: str = 'split_train_dpr_fixed_context.json'
-    dev_filename: str = 'split_dev_dpr.json'
+    # dev_filename: str = 'split_dev_dpr.json'
+    dev_filename: str = 'dev_dpr.json'
     # dev_filename: str = 'split_dev_dpr_fixed_context.json'
     test_filename: str = None
 
