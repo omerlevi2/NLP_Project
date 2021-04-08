@@ -10,7 +10,7 @@ from dpr.experiments.flows import update_document_store_embeddings_and_save
 
 load = False
 populate_doucment_store = False
-train = False
+train = True
 update_embeddings = True
 answer_flow = True
 
@@ -34,7 +34,7 @@ else:
         batch_size = 6
         trainer.train(retriever,
                       qa_dataset,
-                      RetrieverTrainParams(num_positives=1, num_hard_negatives=5, n_epochs=2,
+                      RetrieverTrainParams(num_positives=1, num_hard_negatives=5, n_epochs=3,
                                            batch_size=batch_size,
                                            grad_acc_steps=16 // batch_size, evaluate_every=500 // batch_size)
                       # RetrieverTrainParams(num_positives=1*4, num_hard_negatives=15, n_epochs=6,
@@ -54,7 +54,7 @@ else:
                 question = example['question']
                 # embeded = retriever.embed_queries([question])
                 # embeded = embeded[0]
-                retrieved = retriever.retrieve(question, top_k=7)
+                retrieved = retriever.retrieve(question, top_k=5)
                 # passages = [x.text for x in retrieved]
                 print(example)
                 d[question] = retrieved
