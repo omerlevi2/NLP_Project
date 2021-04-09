@@ -35,7 +35,7 @@ def retrieve_passages(dataset, d):
         question = example['question']
         # embeded = retriever.embed_queries([question])
         # embeded = embeded[0]
-        retrieved = retriever.retrieve(question, top_k=7)
+        retrieved = retriever.retrieve(question, top_k=10)
         ans = []
         for ret in retrieved:
             ret_dict = ret.__dict__
@@ -43,9 +43,9 @@ def retrieve_passages(dataset, d):
             ans.append(ret_dict)
         # passages = [x.text for x in retrieved]
         # scores = passage_embeddings * embeded
-        print(question)
-        print(ans)
-        print('\n\n')
+        # print(question)
+        # print(ans)
+        # print('\n\n')
         d[question] = ans
         # break
 
@@ -55,5 +55,5 @@ retrieve_passages(qa_dataset.train_set(), result)
 retrieve_passages(qa_dataset.dev_set(), result)
 print(result)
 
-with open('strategy_retrieved_passages.json', 'w', encoding='utf-8') as f:
+with open('strategy_retrieved_passages_10.json', 'w', encoding='utf-8') as f:
     json.dump(result, f)
